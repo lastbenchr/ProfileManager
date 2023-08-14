@@ -14,27 +14,17 @@ import { RxCrossCircled } from "react-icons/rx";
 import InputFields from "./components/InputFields";
 import { calculateAge } from "./components/utils/DRYmethods";
 
-// import Heading from "../Heading";
-// import IMAGES from "../../Images";
-
-function Accordion({
-  accordionData,
-  hiddenPara,
-  hiddenImg,
-  parentfun,
-  pd,
-  isEditable,
-}) {
+function Accordion({ user, stateExpanded }) {
   const [active, setActive] = useState(false);
   const accordionDisplay = useRef(null);
   const [height, setHeight] = useState("0px");
 
-  const [name, setName] = useState(
-    `${accordionData.first} ${accordionData.last}`
-  );
+  //new logic
+  const [editable, setEditable] = useState(false); // local state variable for current accordion
+  const [name, setName] = useState(`${user.first} ${user.last}`);
 
   function toggleAccordion() {
-    if (!isEditable.edit) {
+    if (!stateExpanded.expanded) {
       setActive(!active);
       setHeight(
         active ? "0px" : `${accordionDisplay.current.scrollHeight + 10}px`
@@ -43,11 +33,10 @@ function Accordion({
   }
 
   const handleEdit = () => {
-    console.log("handle edit clicked", isEditable);
-    let age = calculateAge(accordionData.dob);
+    let age = calculateAge(user.dob);
     if (age >= 18) {
-      isEditable.setedit(true);
-      console.log("handle edit changed", isEditable);
+      setEditable(true);
+      stateExpanded.setExpanded(true);
     }
   };
 
@@ -57,17 +46,16 @@ function Accordion({
       if (/\d/.test(e.key)) {
         e.preventDefault();
       }
-      // setName();
     };
     return (
-      <InputWrapper editable={isEditable.edit}>
+      <InputWrapper editable={editable}>
         <CountryInput
           type="text"
           placeholder="Name"
           maxLength={30}
           onKeyDown={handleKeyPress}
           value={name}
-          readOnly={isEditable.edit}
+          readOnly={editable}
         />
       </InputWrapper>
     );
@@ -78,12 +66,12 @@ function Accordion({
   return (
     <AccordionSection>
       <FlexContainer>
-        <RoundedImage imgSrc={accordionData.picture} />
+        <RoundedImage imgSrc={user.picture} />
         <CountryInputField />
         <AccordionButton
           className={`accordion ${active ? "active" : ""}`}
           onClick={toggleAccordion}
-          pd={pd}
+          isExpanded={stateExpanded.expanded}
         >
           <span style={{ marginLeft: "20px", fontSize: "20px" }}>
             {active ? <BsChevronUp /> : <BsChevronDown />}
@@ -95,10 +83,13 @@ function Accordion({
         ref={accordionDisplay}
         style={{ maxHeight: `${height}` }}
       >
-        <InputFields data={accordionData} isEditable={isEditable} />
+        <InputFields
+          data={user}
+          isEditable={{ edit: editable, setedit: setEditable }}
+        />
 
         <ButtonsWrapper>
-          {isEditable.edit ? (
+          {editable ? (
             <>
               <CancelButton /> <SaveButton />
             </>
@@ -152,8 +143,7 @@ const AccordionSection = styled.div`
 
 const AccordionButton = styled.div`
   color: grey;
-  cursor: pointer;
-
+  cursor: ${(props) => (props.isExpanded ? "not-allowed" : "pointer")};
   outline: none;
   transition: background-color 0.3s ease;
   //new for left align

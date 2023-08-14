@@ -7,35 +7,35 @@ import axios from "axios";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { GlobalStyle } from "./components/utils/globalStyles";
+import data from "./celebrities.json";
 
 function App() {
-  const [celebritiesData, setCelebritiesData] = useState([]);
-  const [editable, setEditable] = useState(false);
+  const [users, setUsers] = useState(data);
+  //global accordion lock on edit mode.
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    axios
-      .get("/celebrities.json")
-      .then((response) => setCelebritiesData(response.data));
+    // Load data from local storage when component mounts
+    const storedData = JSON.parse(localStorage.getItem("users"));
+    if (storedData) {
+      setUsers(storedData);
+    }
   }, []);
 
-  console.log("data", celebritiesData);
+  console.log("data", users);
 
   return (
     <>
       <GlobalStyle />
       <MainContainer>
         <Header />
-        {celebritiesData &&
-          celebritiesData.map((ele, ind) => {
+        {users &&
+          users.map((user) => {
             return (
               <Accordion
-                key={ind}
-                accordionData={ele}
-                isEditable={{ edit: editable, setedit: setEditable }}
-                // hiddenPara={ele.hiddenPara}
-                // parentfun={handleImg}
-                // hiddenImg={ele.hiddenImg}
-                // pd={pd}
+                key={user.id}
+                user={user}
+                stateExpanded={{ expanded: expanded, setExpanded: setExpanded }}
               />
             );
           })}
