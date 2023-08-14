@@ -2,37 +2,72 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import RoundedImage from "./components/RoundedImage";
 import { FlexContainer } from "./components/Styles";
-import { BsChevronDown, BsChevronUp, BsPencil } from "react-icons/bs";
+import {
+  BsChevronDown,
+  BsChevronUp,
+  BsPencil,
+  BsCheckCircle,
+} from "react-icons/bs";
 import { GoTrash } from "react-icons/go";
+import { RxCrossCircled } from "react-icons/rx";
+
 import InputFields from "./components/InputFields";
+import { calculateAge } from "./components/utils/DRYmethods";
 
 // import Heading from "../Heading";
 // import IMAGES from "../../Images";
 
-function Accordion({ title, hiddenPara, hiddenImg, parentfun, pd }) {
+function Accordion({
+  accordionData,
+  hiddenPara,
+  hiddenImg,
+  parentfun,
+  pd,
+  isEditable,
+}) {
   const [active, setActive] = useState(false);
   const accordionDisplay = useRef(null);
   const [height, setHeight] = useState("0px");
 
+  const [name, setName] = useState(
+    `${accordionData.first} ${accordionData.last}`
+  );
+
   function toggleAccordion() {
-    setActive(!active);
-    setHeight(active ? "0px" : `${accordionDisplay.current.scrollHeight}px`);
+    if (!isEditable.edit) {
+      setActive(!active);
+      setHeight(
+        active ? "0px" : `${accordionDisplay.current.scrollHeight + 10}px`
+      );
+    }
   }
 
-  const CountryInputField = () => {
+  const handleEdit = () => {
+    console.log("handle edit clicked", isEditable);
+    let age = calculateAge(accordionData.dob);
+    if (age >= 18) {
+      isEditable.setedit(true);
+      console.log("handle edit changed", isEditable);
+    }
+  };
+
+  const CountryInputField = ({}) => {
     const handleKeyPress = (e) => {
       // Prevent entering numeric digits (0-9)
       if (/\d/.test(e.key)) {
         e.preventDefault();
       }
+      // setName();
     };
     return (
-      <InputWrapper>
+      <InputWrapper editable={isEditable.edit}>
         <CountryInput
           type="text"
           placeholder="Name"
           maxLength={30}
           onKeyDown={handleKeyPress}
+          value={name}
+          readOnly={isEditable.edit}
         />
       </InputWrapper>
     );
@@ -43,8 +78,7 @@ function Accordion({ title, hiddenPara, hiddenImg, parentfun, pd }) {
   return (
     <AccordionSection>
       <FlexContainer>
-        <RoundedImage />
-        {/* <p style={{ fontSize: "18px", color: "black" }}>{title}</p> */}
+        <RoundedImage imgSrc={accordionData.picture} />
         <CountryInputField />
         <AccordionButton
           className={`accordion ${active ? "active" : ""}`}
@@ -61,15 +95,20 @@ function Accordion({ title, hiddenPara, hiddenImg, parentfun, pd }) {
         ref={accordionDisplay}
         style={{ maxHeight: `${height}` }}
       >
-        <InputFields />
+        <InputFields data={accordionData} isEditable={isEditable} />
 
         <ButtonsWrapper>
-          {" "}
-          <Delete />
-          <Edit />
+          {isEditable.edit ? (
+            <>
+              <CancelButton /> <SaveButton />
+            </>
+          ) : (
+            <>
+              <Delete />
+              <Edit onClick={handleEdit} />
+            </>
+          )}
         </ButtonsWrapper>
-
-        {/* <p style={{ fontSize: "16px" }}>{hiddenPara}</p> */}
       </AccordionContent>
     </AccordionSection>
   );
@@ -84,6 +123,8 @@ const CountryInput = styled.input`
   outline: none;
   background: transparent;
   margin-left: 5px;
+  font-weight: bold;
+  font-size: 18px;
 `;
 
 const InputWrapper = styled.div`
@@ -92,7 +133,7 @@ const InputWrapper = styled.div`
   border: 1px solid #cbcbcc;
   border-radius: 20px;
   padding: 8px 5px;
-  margin: 5px;
+  border: ${(props) => (props.editable ? "1px solid #cbcbcc" : "none")};
   & > * {
   }
 `;
@@ -143,11 +184,20 @@ const Edit = styled(BsPencil)`
   color: #3498db;
 `;
 
+const SaveButton = styled(BsCheckCircle)`
+  color: green;
+`;
+
+const CancelButton = styled(RxCrossCircled)`
+  color: red;
+  font-size: 25px !important;
+`;
+
 const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 20px;
-  margin-top: 18px;
+  margin-top: 10px;
 
   > * {
     cursor: pointer;

@@ -25,7 +25,7 @@ const MainContainer = styled.div`
   display: grid;
   place-items: center;
   gap: 10px;
-  gap: 20px @media (min-width: 1020px) {
+  @media (min-width: 1020px) {
     text-align: left;
   }
 `;
