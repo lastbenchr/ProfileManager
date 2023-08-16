@@ -14,8 +14,8 @@ import { RxCrossCircled } from "react-icons/rx";
 import InputFields from "./components/InputFields";
 import { calculateAge } from "./components/utils/DRYmethods";
 
-function Accordion({ user, stateExpanded }) {
-  const [active, setActive] = useState(false);
+function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
+  // const [active, setActive] = useState(false);
   const accordionDisplay = useRef(null);
   const [height, setHeight] = useState("0px");
 
@@ -23,12 +23,20 @@ function Accordion({ user, stateExpanded }) {
   const [editable, setEditable] = useState(false); // local state variable for current accordion
   const [name, setName] = useState(`${user.first} ${user.last}`);
 
+  useEffect(() => {
+    if (isActive) {
+      setHeight(`${accordionDisplay.current.scrollHeight + 10}px`);
+    } else {
+      setHeight("0px");
+    }
+  }, [isActive]);
+
   function toggleAccordion() {
     if (!stateExpanded.expanded) {
-      setActive(!active);
-      setHeight(
-        active ? "0px" : `${accordionDisplay.current.scrollHeight + 10}px`
-      );
+      handleActiveAccordion(user.id);
+      // setHeight(
+      //   isActive ? "0px" : `${accordionDisplay.current.scrollHeight + 10}px`
+      // );
     }
   }
 
@@ -69,38 +77,39 @@ function Accordion({ user, stateExpanded }) {
         <RoundedImage imgSrc={user.picture} />
         <CountryInputField />
         <AccordionButton
-          className={`accordion ${active ? "active" : ""}`}
+          // className={`accordion ${active ? "active" : ""}`}
           onClick={toggleAccordion}
           isExpanded={stateExpanded.expanded}
         >
           <span style={{ marginLeft: "20px", fontSize: "20px" }}>
-            {active ? <BsChevronUp /> : <BsChevronDown />}
+            {isActive ? <BsChevronUp /> : <BsChevronDown />}
           </span>
         </AccordionButton>
       </FlexContainer>
+      {isActive && (
+        <AccordionContent
+          ref={accordionDisplay}
+          style={{ maxHeight: `${height}` }}
+        >
+          <InputFields
+            data={user}
+            isEditable={{ edit: editable, setedit: setEditable }}
+          />
 
-      <AccordionContent
-        ref={accordionDisplay}
-        style={{ maxHeight: `${height}` }}
-      >
-        <InputFields
-          data={user}
-          isEditable={{ edit: editable, setedit: setEditable }}
-        />
-
-        <ButtonsWrapper>
-          {editable ? (
-            <>
-              <CancelButton /> <SaveButton />
-            </>
-          ) : (
-            <>
-              <Delete />
-              <Edit onClick={handleEdit} />
-            </>
-          )}
-        </ButtonsWrapper>
-      </AccordionContent>
+          <ButtonsWrapper>
+            {editable ? (
+              <>
+                <CancelButton /> <SaveButton />
+              </>
+            ) : (
+              <>
+                <Delete />
+                <Edit onClick={handleEdit} />
+              </>
+            )}
+          </ButtonsWrapper>
+        </AccordionContent>
+      )}
     </AccordionSection>
   );
 }
@@ -162,7 +171,7 @@ const AccordionButton = styled.div`
 const AccordionContent = styled.div`
   background-color: white;
   overflow: hidden;
-  transition: max-height 0.2s ease;
+  transition: max-height 0.3s ease;
 `;
 
 //trash

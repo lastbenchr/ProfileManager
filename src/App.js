@@ -13,6 +13,7 @@ function App() {
   const [users, setUsers] = useState(data);
   //global accordion lock on edit mode.
   const [expanded, setExpanded] = useState(false);
+  const [expandedAccordionId, setExpandedAccordionId] = useState(null); // Track expanded accordion id
 
   useEffect(() => {
     // Load data from local storage when component mounts
@@ -21,6 +22,14 @@ function App() {
       setUsers(storedData);
     }
   }, []);
+
+  const handleActiveAccordion = (userId) => {
+    if (expandedAccordionId !== userId) {
+      setExpandedAccordionId(userId);
+    } else {
+      setExpandedAccordionId(null);
+    }
+  };
 
   console.log("data", users);
 
@@ -36,6 +45,8 @@ function App() {
                 key={user.id}
                 user={user}
                 stateExpanded={{ expanded: expanded, setExpanded: setExpanded }}
+                handleActiveAccordion={handleActiveAccordion}
+                isActive={expandedAccordionId === user.id}
               />
             );
           })}
