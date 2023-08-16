@@ -21,7 +21,7 @@ function App() {
     if (storedData) {
       setUsers(storedData);
     }
-  }, []);
+  }, [users]);
 
   const handleActiveAccordion = (userId) => {
     if (expandedAccordionId !== userId) {

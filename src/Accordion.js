@@ -13,6 +13,7 @@ import { RxCrossCircled } from "react-icons/rx";
 
 import InputFields from "./components/InputFields";
 import { calculateAge } from "./components/utils/DRYmethods";
+import useUserAccordion from "./components/utils/useAccordionUser";
 
 function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
   // const [active, setActive] = useState(false);
@@ -22,6 +23,7 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
   //new logic
   const [editable, setEditable] = useState(false); // local state variable for current accordion
   const [name, setName] = useState(`${user.first} ${user.last}`);
+  const { editedUser, handleInputChange } = useUserAccordion(user);
 
   useEffect(() => {
     if (isActive) {
@@ -49,21 +51,22 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
   };
 
   const CountryInputField = ({}) => {
-    const handleKeyPress = (e) => {
-      // Prevent entering numeric digits (0-9)
-      if (/\d/.test(e.key)) {
-        e.preventDefault();
-      }
-    };
+    // const handleKeyPress = (e) => {
+    // Prevent entering numeric digits (0-9)
+    //   if (/\d/.test(e.key)) {
+    //     e.preventDefault();
+    //   }
+    // };
     return (
       <InputWrapper editable={editable}>
         <CountryInput
           type="text"
           placeholder="Name"
           maxLength={30}
-          onKeyDown={handleKeyPress}
-          value={name}
-          readOnly={editable}
+          value={`${editedUser.first}`}
+          // onKeyDown={handleKeyPress}
+          onChange={(e) => handleInputChange("first", e.target.value)}
+          readOnly={!editable} // initally true
         />
       </InputWrapper>
     );
