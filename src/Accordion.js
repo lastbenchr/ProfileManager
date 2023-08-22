@@ -22,7 +22,8 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
 
   //new logic
   const [editable, setEditable] = useState(false); // local state variable for current accordion
-  const [name, setName] = useState(`${user.first} ${user.last}`);
+  // const [name, setName] = useState(`${user.first} ${user.last}`);
+
   const { editedUser, handleInputChange } = useUserAccordion(user);
 
   useEffect(() => {
@@ -36,9 +37,6 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
   function toggleAccordion() {
     if (!stateExpanded.expanded) {
       handleActiveAccordion(user.id);
-      // setHeight(
-      //   isActive ? "0px" : `${accordionDisplay.current.scrollHeight + 10}px`
-      // );
     }
   }
 
@@ -50,35 +48,62 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
     }
   };
 
-  const CountryInputField = ({}) => {
-    // const handleKeyPress = (e) => {
+  const handleKeyPress = (e) => {
+    const handleSplitName = (newValue) => {
+      console.log("Performing logic for name change:", newValue);
+
+      const fullName = newValue;
+
+      // eg:  return value of split method --> ["Sooraj", "Yadav"]; destructured this below.
+      const [first, last] = fullName.split(" ");
+
+      handleInputChange("first", first);
+      handleInputChange("last", last);
+    };
+
     // Prevent entering numeric digits (0-9)
-    //   if (/\d/.test(e.key)) {
-    //     e.preventDefault();
-    //   }
-    // };
-    return (
-      <InputWrapper editable={editable}>
-        <CountryInput
-          type="text"
-          placeholder="Name"
-          maxLength={30}
-          value={`${editedUser.first}`}
-          // onKeyDown={handleKeyPress}
-          onChange={(e) => handleInputChange("first", e.target.value)}
-          readOnly={!editable} // initally true
-        />
-      </InputWrapper>
-    );
+    if (/\d/.test(e.key)) {
+      e.preventDefault();
+    } else {
+      const newValue = e.target.value;
+      handleSplitName(newValue);
+    }
   };
 
+  // const CountryInputField = ({}) => {
+  //   return (
+  //     <InputWrapper editable={editable}>
+  //       <CountryInput
+  //         type="text"
+  //         placeholder="Name"
+  //         maxLength={30}
+  //         // value={`${editedUser.first} ${editedUser.last}`}
+  //         // onKeyDown={handleKeyPress}
+  //         onKeyDown={(e) => handleInputChange("first", e.target.value)}
+  //         readOnly={!editable} // initally true
+  //       />
+  //     </InputWrapper>
+  //   );
+  // };
+
   //delete & edit button
+  console.log("Final edited user", editedUser);
 
   return (
     <AccordionSection>
       <FlexContainer>
-        <RoundedImage imgSrc={user.picture} />
-        <CountryInputField />
+        <RoundedImage imgSrc={editedUser.picture} />
+        <InputWrapper editable={editable}>
+          <CountryInput
+            type="text"
+            placeholder="Name"
+            maxLength={30}
+            value={`${editedUser.first || ""} ${editedUser.last || ""}`}
+            // onKeyDown={}
+            onChange={(e) => handleKeyPress(e)}
+            readOnly={!editable} // initally true
+          />
+        </InputWrapper>
         <AccordionButton
           // className={`accordion ${active ? "active" : ""}`}
           onClick={toggleAccordion}
@@ -95,7 +120,8 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
           style={{ maxHeight: `${height}` }}
         >
           <InputFields
-            data={user}
+            editedUser={editedUser}
+            handleInputChange={handleInputChange}
             isEditable={{ edit: editable, setedit: setEditable }}
           />
 

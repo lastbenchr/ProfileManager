@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { BsChevronDown } from "react-icons/bs"; // Replace 'fa' with the appropriate icon package you want to use
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import { calculateAge } from "./utils/DRYmethods";
+import { calculateAge, calculateDob } from "./utils/DRYmethods";
 import Dropdown from "./Dropdown";
 
-const InputFields = ({ data, isEditable }) => {
+const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
   const handleKeyDown = (e) => {
     // Allow only numeric digits (0-9) and some special keys like Backspace, Arrow keys, etc.
     const allowedKeys = [
@@ -24,11 +24,7 @@ const InputFields = ({ data, isEditable }) => {
   };
 
   const AgeInput = () => {
-    const [age, setAge] = useState("");
-
-    useEffect(() => {
-      setAge(calculateAge(data.dob));
-    }, [data.dob]);
+    const [age, setAge] = useState(calculateAge(editedUser.dob));
 
     return (
       <div>
@@ -42,7 +38,17 @@ const InputFields = ({ data, isEditable }) => {
             value={age}
             maxLength={2}
             readOnly={!isEditable.edit} // isEditable.edit= false
-            onKeyDown={handleKeyDown}
+            // onKeyDown={handleKeyDown}
+            onChange={(e) => {
+              console.log("I got clicked");
+              if (isEditable.edit) {
+                setAge(e.target.value);
+              }
+            }}
+            onBlur={() => {
+              // console.log("age back to dob", typeof calculateDob(age));
+              handleInputChange("dob", calculateDob(age));
+            }}
           />
         </InputWrapper>
       </div>
@@ -50,7 +56,7 @@ const InputFields = ({ data, isEditable }) => {
   };
 
   const GenderSelect = () => {
-    const [selectedGender, setSelectedGender] = useState(data.gender);
+    const [selectedGender, setSelectedGender] = useState(editedUser.gender);
 
     const handleSelectClick = (event) => {
       if (!isEditable.edit) {
@@ -72,36 +78,42 @@ const InputFields = ({ data, isEditable }) => {
   };
 
   const CountryInputField = () => {
-    const [ucountry, setUcountry] = useState(data.country);
-
     const handleKeyPress = (e) => {
       // Prevent entering numeric digits (0-9)
       if (/\d/.test(e.key)) {
         e.preventDefault();
       }
     };
-    return (
-      <div>
-        <Label>
-          <p>Country</p>
-        </Label>
-        <InputWrapper editable={isEditable.edit}>
-          <CountryInput
-            type="text"
-            placeholder="Country"
-            value={ucountry}
-            maxLength={30}
-            readOnly={!isEditable.edit} // isEditable.edit= false
-            onKeyDown={handleKeyPress}
-          />
-        </InputWrapper>
-      </div>
-    );
   };
 
   const DescriptionInput = () => {
-    const [description, setDescription] = useState(data.description);
-    return (
+    const [description, setDescription] = useState(editedUser.description);
+  };
+
+  return (
+    <>
+      <FlexContainerInput style={{ marginTop: "17px" }}>
+        <AgeInput />
+        <GenderSelect />
+        {/* <CountryInputField /> */}
+        <div>
+          <Label>
+            <p>Country</p>
+          </Label>
+          <InputWrapper editable={isEditable.edit}>
+            <CountryInput
+              type="text"
+              placeholder="Country"
+              value={editedUser.country}
+              maxLength={30}
+              readOnly={!isEditable.edit} // isEditable.edit= false
+              // onKeyDown={handleKeyPress}
+              onChange={(e) => handleInputChange("country", e.target.value)}
+            />
+          </InputWrapper>
+        </div>
+      </FlexContainerInput>
+      {/* <DescriptionInput /> */}
       <div style={{ marginTop: "20px" }}>
         <Label>
           <p>Description</p>
@@ -111,22 +123,12 @@ const InputFields = ({ data, isEditable }) => {
           <DescriptionTextarea
             rows="5"
             placeholder="Enter description"
-            value={description}
+            value={editedUser.description}
             readOnly={!isEditable.edit} // isEditable.edit= false
+            onChange={(e) => handleInputChange("description", e.target.value)}
           />
         </InputWrapper>
       </div>
-    );
-  };
-
-  return (
-    <>
-      <FlexContainerInput style={{ marginTop: "17px" }}>
-        <AgeInput />
-        <GenderSelect />
-        <CountryInputField />
-      </FlexContainerInput>
-      <DescriptionInput />
     </>
   );
 };

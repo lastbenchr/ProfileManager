@@ -15,4 +15,16 @@ const calculateAge = (dob) => {
   return age;
 };
 
-export { calculateAge };
+const calculateDob = (age) => {
+  const currentDate = new Date();
+  const birthYear = currentDate.getFullYear() - age;
+
+  const currentMonth = currentDate.getMonth();
+  const currentDay = currentDate.getDate();
+
+  const birthDate = new Date(birthYear, currentMonth, currentDay);
+
+  return birthDate.toISOString().substr(0, 10); // Format as yyyy-mm-dd
+};
+
+export { calculateAge, calculateDob };
