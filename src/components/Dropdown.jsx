@@ -46,14 +46,15 @@ const Option = styled.div`
   }
 `;
 
-const Dropdown = ({editable}) => {
+const Dropdown = ({editable, editedUser, handleInputChange}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState(editedUser.gender);
 
   const options = ["Male", "Female"];
 
   const handleOptionClick = (option) => {
     setSelectedValue(option);
+    handleInputChange("gender", option)
     setIsOpen(false);
   };
 

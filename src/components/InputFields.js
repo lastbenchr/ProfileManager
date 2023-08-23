@@ -35,12 +35,10 @@ const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
           <StyledInput
             type="text"
             placeholder="Age"
-            value={age}
+            value={`${age} Years`}
             maxLength={2}
             readOnly={!isEditable.edit} // isEditable.edit= false
-            // onKeyDown={handleKeyDown}
             onChange={(e) => {
-              console.log("I got clicked");
               if (isEditable.edit) {
                 setAge(e.target.value);
               }
@@ -71,7 +69,11 @@ const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
           <p>Gender</p>
         </Label>
         {/* <InputWrapper editable={isEditable.edit}> */}
-        <Dropdown editable={isEditable.edit} />
+        <Dropdown
+          editable={isEditable.edit}
+          editedUser={editedUser}
+          handleInputChange={handleInputChange}
+        />
         {/* </InputWrapper> */}
       </div>
     );

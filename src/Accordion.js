@@ -48,10 +48,29 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
     }
   };
 
+  function isAnyFieldValueEmpty(obj) {
+    const emptyFields = Object.keys(obj).filter((key) => {
+      const value = obj[key];
+      return value === null || value === undefined || value === ""; // if true then insert data into emptyFields array.
+    });
+
+    return emptyFields.length > 0; // returns true if any data inside emptyFields array.
+  }
+
+  function hasUserChanged(originalUser, editedUser) {
+    const keys = Object.keys(originalUser);
+
+    for (const key of keys) {
+      if (originalUser[key] !== editedUser[key]) {
+        return true; // If any value is different, return true
+      }
+    }
+
+    return false; // If all values are the same, return false
+  }
+
   const handleKeyPress = (e) => {
     const handleSplitName = (newValue) => {
-      console.log("Performing logic for name change:", newValue);
-
       const fullName = newValue;
 
       // eg:  return value of split method --> ["Sooraj", "Yadav"]; destructured this below.
@@ -87,19 +106,23 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
   // };
 
   //delete & edit button
-  console.log("Final edited user", editedUser);
+  // console.log("Final edited user", editedUser);
+
+  const isDisableSave =
+    isAnyFieldValueEmpty(editedUser) || !hasUserChanged(user, editedUser);
+  // const isDisableSave = true;
+  console.log("isDisableSave", isDisableSave);
 
   return (
     <AccordionSection>
       <FlexContainer>
-        <RoundedImage imgSrc={editedUser.picture} />
+        {/* <RoundedImage imgSrc={editedUser.picture} /> */}
         <InputWrapper editable={editable}>
           <CountryInput
             type="text"
             placeholder="Name"
             maxLength={30}
             value={`${editedUser.first || ""} ${editedUser.last || ""}`}
-            // onKeyDown={}
             onChange={(e) => handleKeyPress(e)}
             readOnly={!editable} // initally true
           />
@@ -128,7 +151,13 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
           <ButtonsWrapper>
             {editable ? (
               <>
-                <CancelButton /> <SaveButton />
+                <CancelButton />{" "}
+                <BaseButton
+                  onClick={() => console.log("Oh yeh")}
+                  disabled={isDisableSave}
+                >
+                  <SaveButton disabled={isDisableSave} />
+                </BaseButton>
               </>
             ) : (
               <>
@@ -204,6 +233,13 @@ const AccordionContent = styled.div`
 `;
 
 //trash
+
+const BaseButton = styled.button`
+  padding: 0px;
+  border: none;
+  background-color: inherit;
+`;
+
 const Delete = styled(GoTrash)`
   color: red;
 `;
@@ -214,6 +250,8 @@ const Edit = styled(BsPencil)`
 
 const SaveButton = styled(BsCheckCircle)`
   color: green;
+  font-size: 23px;
+  opacity: ${(props) => (props.disabled ? 0.3 : 1)};
 `;
 
 const CancelButton = styled(RxCrossCircled)`
@@ -232,3 +270,42 @@ const ButtonsWrapper = styled.div`
     font-size: 23px;
   }
 `;
+
+/**
+button ki styling same jayegi.
+padding: 0px;
+border: none;
+background-color: inherit;
+
+
+icon :     opacity: .3;
+
+---------
+if disabled true:
+button opacity icon ki .3 kardenge.
+false opacity 1. or remove property.
+----
+button pe toh disable ho he jayega.
+-----
+how to create ?
+1. sabhi icons button k styling ko inherit karenge.
+2. sabi icons button componnet lekar button mei default style
+then 
+us button ko odh kar icons apne aap ko button bana lenge.
+then
+if disable true then svg opacity .3 else opacity 1
+------------------
+user object and editedUser object dono ko compare if not matched means changed return true else false
+
+
+
+
+
+
+
+
+
+
+
+
+*/
