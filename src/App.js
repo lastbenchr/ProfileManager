@@ -14,14 +14,17 @@ function App() {
   //global accordion lock on edit mode.
   const [expanded, setExpanded] = useState(false);
   const [expandedAccordionId, setExpandedAccordionId] = useState(null); // Track expanded accordion id
+  const [isLocalStorageCheck, setIsLocalStorageCheck] = useState(false);
 
   useEffect(() => {
     // Load data from local storage when component mounts
     const storedData = JSON.parse(localStorage.getItem("users"));
     if (storedData) {
+      // console.log("got users data from local storage", storedData);
       setUsers(storedData);
     }
-  }, [users]);
+    setIsLocalStorageCheck(true);
+  }, []);
 
   const handleActiveAccordion = (userId) => {
     if (expandedAccordionId !== userId) {
@@ -31,14 +34,23 @@ function App() {
     }
   };
 
-  console.log("data", users);
+  const handleSave = (editedUser) => {
+    const updatedUsers = users.map((user) =>
+      user.id === editedUser.id ? editedUser : user
+    );
+    setUsers(updatedUsers);
+    // setEditingUserId(null);
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+  };
+
+  // console.log("data", users);
 
   return (
     <>
       <GlobalStyle />
       <MainContainer>
         <Header />
-        {users &&
+        {isLocalStorageCheck &&
           users.map((user) => {
             return (
               <Accordion
@@ -47,6 +59,7 @@ function App() {
                 stateExpanded={{ expanded: expanded, setExpanded: setExpanded }}
                 handleActiveAccordion={handleActiveAccordion}
                 isActive={expandedAccordionId === user.id}
+                handleSave={handleSave}
               />
             );
           })}

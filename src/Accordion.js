@@ -13,9 +13,14 @@ import { RxCrossCircled } from "react-icons/rx";
 
 import InputFields from "./components/InputFields";
 import { calculateAge } from "./components/utils/DRYmethods";
-import useUserAccordion from "./components/utils/useAccordionUser";
 
-function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
+function Accordion({
+  user,
+  stateExpanded,
+  handleActiveAccordion,
+  isActive,
+  handleSave,
+}) {
   // const [active, setActive] = useState(false);
   const accordionDisplay = useRef(null);
   const [height, setHeight] = useState("0px");
@@ -24,7 +29,7 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
   const [editable, setEditable] = useState(false); // local state variable for current accordion
   // const [name, setName] = useState(`${user.first} ${user.last}`);
 
-  const { editedUser, handleInputChange } = useUserAccordion(user);
+  const [editedUser, setEditedUser] = useState(user ); // shallow copy
 
   useEffect(() => {
     if (isActive) {
@@ -32,7 +37,16 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
     } else {
       setHeight("0px");
     }
-  }, [isActive]);
+    // Update the local state when the 'user' prop changes
+    setEditedUser(user);
+  }, [isActive,user]);
+
+  const handleInputChange = (field, value) => {
+    setEditedUser((prevUser) => ({
+      ...prevUser,
+      [field]: value,
+    }));
+  };
 
   function toggleAccordion() {
     if (!stateExpanded.expanded) {
@@ -111,12 +125,13 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
   const isDisableSave =
     isAnyFieldValueEmpty(editedUser) || !hasUserChanged(user, editedUser);
   // const isDisableSave = true;
-  console.log("isDisableSave", isDisableSave);
+  // console.log("Individual Accordion user data", user);
+  // console.log("Individual Accordion editedUser data", editedUser);
 
   return (
     <AccordionSection>
       <FlexContainer>
-        {/* <RoundedImage imgSrc={editedUser.picture} /> */}
+        <RoundedImage imgSrc={editedUser.picture} />
         <InputWrapper editable={editable}>
           <CountryInput
             type="text"
@@ -153,10 +168,13 @@ function Accordion({ user, stateExpanded, handleActiveAccordion, isActive }) {
               <>
                 <CancelButton />{" "}
                 <BaseButton
-                  onClick={() => console.log("Oh yeh")}
+                  onClick={() => handleSave(editedUser)}
                   disabled={isDisableSave}
                 >
-                  <SaveButton disabled={isDisableSave} />
+                  <SaveButton
+                    disabled={isDisableSave}
+                    // onClick={}
+                  />
                 </BaseButton>
               </>
             ) : (
@@ -272,39 +290,11 @@ const ButtonsWrapper = styled.div`
 `;
 
 /**
-button ki styling same jayegi.
-padding: 0px;
-border: none;
-background-color: inherit;
 
+1. enable save btn not working proper why? 
+because there is two input first name and last name key not need to fill empty.
 
-icon :     opacity: .3;
-
----------
-if disabled true:
-button opacity icon ki .3 kardenge.
-false opacity 1. or remove property.
-----
-button pe toh disable ho he jayega.
------
-how to create ?
-1. sabhi icons button k styling ko inherit karenge.
-2. sabi icons button componnet lekar button mei default style
-then 
-us button ko odh kar icons apne aap ko button bana lenge.
-then
-if disable true then svg opacity .3 else opacity 1
-------------------
-user object and editedUser object dono ko compare if not matched means changed return true else false
-
-
-
-
-
-
-
-
-
+2. Save button k click se original object mei update hona chahiye and edit mode close hojana chahiye.
 
 
 
