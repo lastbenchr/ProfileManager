@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 const CustomSelect = styled.div`
   position: relative;
-  background-color: transparent;
   border: none;
   outline: none;
   cursor: pointer;
@@ -12,7 +11,7 @@ const CustomSelect = styled.div`
   border: ${(props) => props.editable ? "1px solid #cbcbcc" : "none"};
   border-radius: 20px;
 `;
-    
+
 const SelectedValue = styled.div`
     display: flex;
     justify-content: space-between;
@@ -46,7 +45,7 @@ const Option = styled.div`
   }
 `;
 
-const Dropdown = ({editable, editedUser, handleInputChange}) => {
+const Dropdown = ({ editable, editedUser, handleInputChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(editedUser.gender);
 
@@ -61,12 +60,12 @@ const Dropdown = ({editable, editedUser, handleInputChange}) => {
   return (
     <CustomSelect editable={editable}>
       <SelectedValue onClick={() => {
-        if(editable){
-            setIsOpen(!isOpen)
+        if (editable) {
+          setIsOpen(!isOpen)
         }
       }}>
-        {selectedValue || "Select Gender"}{editable ? <BsChevronDown/> :""}
-      </SelectedValue> 
+        {selectedValue || "Select Gender"}{editable ? <BsChevronDown /> : ""}
+      </SelectedValue>
       <OptionsContainer isOpen={isOpen}>
         {options.map((option, index) => (
           <Option key={index} onClick={() => handleOptionClick(option)}>

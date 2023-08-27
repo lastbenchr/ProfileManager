@@ -298,14 +298,3 @@ const ButtonsWrapper = styled.div`
     font-size: 23px;
   }
 `;
-
-/**
-
-1. enable save btn not working proper why? 
-because there is two input first name and last name key not need to fill empty.
-
-2. Save button k click se original object mei update hona chahiye and edit mode close hojana chahiye.
-
-
-
-*/

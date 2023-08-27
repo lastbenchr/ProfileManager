@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { GlobalStyle } from "./components/utils/globalStyles";
 import data from "./celebrities.json";
+import DeletePopup from "./components/utils/DeletePopup";
 
 function App() {
   const [users, setUsers] = useState(data);
@@ -15,6 +16,7 @@ function App() {
   const [expanded, setExpanded] = useState(false); //global accordion lock on edit mode other accordion to open.
   const [expandedAccordionId, setExpandedAccordionId] = useState(null); // accordion id, open 1 accordion at a time.
   const [isLocalStorageCheck, setIsLocalStorageCheck] = useState(false);
+  const [isDeleteDialogVisible, setDeleteDialogVisible] = useState(true);
 
   useEffect(() => {
     // Load data from local storage when component mounts
@@ -48,6 +50,11 @@ function App() {
   return (
     <>
       <GlobalStyle />
+      {
+        isDeleteDialogVisible && (
+          <DeletePopup/>
+        )
+      }
       <MainContainer>
         <Header />
         {isLocalStorageCheck &&
