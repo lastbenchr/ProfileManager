@@ -11,9 +11,9 @@ import data from "./celebrities.json";
 
 function App() {
   const [users, setUsers] = useState(data);
-  //global accordion lock on edit mode.
-  const [expanded, setExpanded] = useState(false);
-  const [expandedAccordionId, setExpandedAccordionId] = useState(null); // Track expanded accordion id
+
+  const [expanded, setExpanded] = useState(false); //global accordion lock on edit mode other accordion to open.
+  const [expandedAccordionId, setExpandedAccordionId] = useState(null); // accordion id, open 1 accordion at a time.
   const [isLocalStorageCheck, setIsLocalStorageCheck] = useState(false);
 
   useEffect(() => {

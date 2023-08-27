@@ -25,11 +25,10 @@ function Accordion({
   const accordionDisplay = useRef(null);
   const [height, setHeight] = useState("0px");
 
-  //new logic
-  const [editable, setEditable] = useState(false); // local state variable for current accordion
+  const [editable, setEditable] = useState(false); // local state variable for current edit mode border accordion
   // const [name, setName] = useState(`${user.first} ${user.last}`);
 
-  const [editedUser, setEditedUser] = useState(user ); // shallow copy
+  const [editedUser, setEditedUser] = useState({...user} ); // shallow copy
 
   useEffect(() => {
     if (isActive) {
@@ -57,10 +56,22 @@ function Accordion({
   const handleEdit = () => {
     let age = calculateAge(user.dob);
     if (age >= 18) {
-      setEditable(true);
-      stateExpanded.setExpanded(true);
+      setEditable(true); // Open local edit mode, border accordion.
+      stateExpanded.setExpanded(true); //lock globally other accordion to open.
     }
   };
+
+  const handleLocalSave = () => {
+    handleSave(editedUser);
+    setEditable(false); // closes local edit mode, border accordion.
+    stateExpanded.setExpanded(false); // unlock globally other accordion to open.
+  }
+
+  const handleLocalCancel = () => {
+    setEditedUser({...user});
+    setEditable(false); // closes local edit mode, border accordion.
+    stateExpanded.setExpanded(false); // unlock globally other accordion to open.
+  }
 
   function isAnyFieldValueEmpty(obj) {
     const emptyFields = Object.keys(obj).filter((key) => {
@@ -166,14 +177,13 @@ function Accordion({
           <ButtonsWrapper>
             {editable ? (
               <>
-                <CancelButton />{" "}
+                <CancelButton onClick={()=> handleLocalCancel()} />{" "}
                 <BaseButton
-                  onClick={() => handleSave(editedUser)}
+                  onClick={() => handleLocalSave()}
                   disabled={isDisableSave}
                 >
                   <SaveButton
                     disabled={isDisableSave}
-                    // onClick={}
                   />
                 </BaseButton>
               </>

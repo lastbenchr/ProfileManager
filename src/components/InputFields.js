@@ -35,7 +35,7 @@ const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
           <StyledInput
             type="text"
             placeholder="Age"
-            value={`${age} Years`}
+            value={age}
             maxLength={2}
             readOnly={!isEditable.edit} // isEditable.edit= false
             onChange={(e) => {
