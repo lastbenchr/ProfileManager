@@ -20,6 +20,7 @@ function Accordion({
   handleActiveAccordion,
   isActive,
   handleSave,
+  handleDeleteClick,
 }) {
   // const [active, setActive] = useState(false);
   const accordionDisplay = useRef(null);
@@ -28,7 +29,7 @@ function Accordion({
   const [editable, setEditable] = useState(false); // local state variable for current edit mode border accordion
   // const [name, setName] = useState(`${user.first} ${user.last}`);
 
-  const [editedUser, setEditedUser] = useState({...user} ); // shallow copy
+  const [editedUser, setEditedUser] = useState({ ...user }); // shallow copy
 
   useEffect(() => {
     if (isActive) {
@@ -38,7 +39,7 @@ function Accordion({
     }
     // Update the local state when the 'user' prop changes
     setEditedUser(user);
-  }, [isActive,user]);
+  }, [isActive, user]);
 
   const handleInputChange = (field, value) => {
     setEditedUser((prevUser) => ({
@@ -65,13 +66,13 @@ function Accordion({
     handleSave(editedUser);
     setEditable(false); // closes local edit mode, border accordion.
     stateExpanded.setExpanded(false); // unlock globally other accordion to open.
-  }
+  };
 
   const handleLocalCancel = () => {
-    setEditedUser({...user});
+    setEditedUser({ ...user });
     setEditable(false); // closes local edit mode, border accordion.
     stateExpanded.setExpanded(false); // unlock globally other accordion to open.
-  }
+  };
 
   function isAnyFieldValueEmpty(obj) {
     const emptyFields = Object.keys(obj).filter((key) => {
@@ -177,19 +178,17 @@ function Accordion({
           <ButtonsWrapper>
             {editable ? (
               <>
-                <CancelButton onClick={()=> handleLocalCancel()} />{" "}
+                <CancelButton onClick={() => handleLocalCancel()} />{" "}
                 <BaseButton
                   onClick={() => handleLocalSave()}
                   disabled={isDisableSave}
                 >
-                  <SaveButton
-                    disabled={isDisableSave}
-                  />
+                  <SaveButton disabled={isDisableSave} />
                 </BaseButton>
               </>
             ) : (
               <>
-                <Delete />
+                <Delete onClick={() => handleDeleteClick(editedUser.id)} />
                 <Edit onClick={handleEdit} />
               </>
             )}

@@ -64,47 +64,24 @@ const CancelButton = styled.button`
   margin-right: 10px;
 `;
 
-function DeletePopup() {
-    const [isDeleteDialogVisible, setDeleteDialogVisible] = useState(false);
-
-    const handleDeleteClick = () => {
-        setDeleteDialogVisible(true);
-        document.body.classList.add("lock-scroll");
-    };
-
-    const handleDeleteConfirm = () => {
-        // Perform delete logic here
-        setDeleteDialogVisible(false);
-        document.body.classList.remove("lock-scroll");
-    };
-
-    const handleCancelDelete = () => {
-        setDeleteDialogVisible(false);
-        document.body.classList.remove("lock-scroll");
-    };
+function DeletePopup({ handleCancelDelete, handleDeleteConfirm }) {
 
     return (
         <div>
-            {/* Trigger the delete dialog */}
-            <button onClick={handleDeleteClick}>Delete</button>
-
-            {/* Delete Dialog */}
-            {isDeleteDialogVisible && (
-                <DeleteDialog>
-                    <DialogBox>
-                        <p>
-                            <span>Are you sure you want to delete?</span>
-                            <CloseButton onClick={handleCancelDelete}>
-                                <RiCloseLine size={18} />
-                            </CloseButton>
-                        </p>
-                        <ButtonsContainer>
-                            <CancelButton onClick={handleCancelDelete}>Cancel</CancelButton>
-                            <DeleteButton onClick={handleDeleteConfirm}>Delete</DeleteButton>
-                        </ButtonsContainer>
-                    </DialogBox>
-                </DeleteDialog>
-            )}
+            <DeleteDialog>
+                <DialogBox>
+                    <p>
+                        <span>Are you sure you want to delete?</span>
+                        <CloseButton onClick={handleCancelDelete}>
+                            <RiCloseLine size={18} />
+                        </CloseButton>
+                    </p>
+                    <ButtonsContainer>
+                        <CancelButton onClick={handleCancelDelete}>Cancel</CancelButton>
+                        <DeleteButton onClick={handleDeleteConfirm}>Delete</DeleteButton>
+                    </ButtonsContainer>
+                </DialogBox>
+            </DeleteDialog>
         </div>
     );
 }

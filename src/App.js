@@ -16,7 +16,8 @@ function App() {
   const [expanded, setExpanded] = useState(false); //global accordion lock on edit mode other accordion to open.
   const [expandedAccordionId, setExpandedAccordionId] = useState(null); // accordion id, open 1 accordion at a time.
   const [isLocalStorageCheck, setIsLocalStorageCheck] = useState(false);
-  const [isDeleteDialogVisible, setDeleteDialogVisible] = useState(true);
+  const [isDeleteDialogVisible, setDeleteDialogVisible] = useState(false);
+  const [deleteAccordionId, setDeleteAccordionId] = useState("");
 
   useEffect(() => {
     // Load data from local storage when component mounts
@@ -41,20 +42,43 @@ function App() {
       user.id === editedUser.id ? editedUser : user
     );
     setUsers(updatedUsers);
-    // setEditingUserId(null);
     localStorage.setItem("users", JSON.stringify(updatedUsers));
+  };
+
+  const handleDeleteClick = (userId) => {
+    setDeleteDialogVisible(true);
+    document.body.classList.add("lock-scroll");
+
+    setDeleteAccordionId(userId); // sets deleteAccordionId
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialogVisible(false);
+    document.body.classList.remove("lock-scroll");
+  };
+
+  const handleDeleteConfirm = () => {
+    const updatedUsers = users.filter((user) => user.id !== deleteAccordionId);
+    setUsers(updatedUsers);
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+
+    setDeleteDialogVisible(false);
+    document.body.classList.remove("lock-scroll");
   };
 
   // console.log("data", users);
 
+  // console.log("I got clicked set", isDeleteDialogVisible);
+
   return (
     <>
       <GlobalStyle />
-      {
-        isDeleteDialogVisible && (
-          <DeletePopup/>
-        )
-      }
+      {isDeleteDialogVisible && (
+        <DeletePopup
+          handleCancelDelete={handleCancelDelete}
+          handleDeleteConfirm={handleDeleteConfirm}
+        />
+      )}
       <MainContainer>
         <Header />
         {isLocalStorageCheck &&
@@ -67,6 +91,7 @@ function App() {
                 handleActiveAccordion={handleActiveAccordion}
                 isActive={expandedAccordionId === user.id}
                 handleSave={handleSave}
+                handleDeleteClick={handleDeleteClick}
               />
             );
           })}
