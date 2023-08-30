@@ -31,15 +31,15 @@ const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
         <Label>
           <p>Age</p>
         </Label>
-        <InputWrapper editable={isEditable.edit}>
+        <InputWrapper editable={isEditable}>
           <StyledInput
             type="text"
             placeholder="Age"
             value={age}
             maxLength={2}
-            readOnly={!isEditable.edit} // isEditable.edit= false
+            readOnly={!isEditable} // isEditable= false
             onChange={(e) => {
-              if (isEditable.edit) {
+              if (isEditable) {
                 setAge(e.target.value);
               }
             }}
@@ -57,7 +57,7 @@ const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
     const [selectedGender, setSelectedGender] = useState(editedUser.gender);
 
     const handleSelectClick = (event) => {
-      if (!isEditable.edit) {
+      if (!isEditable) {
         // Allow the default click behavior if editable
         return;
       }
@@ -68,9 +68,9 @@ const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
         <Label>
           <p>Gender</p>
         </Label>
-        {/* <InputWrapper editable={isEditable.edit}> */}
+        {/* <InputWrapper editable={isEditable}> */}
         <Dropdown
-          editable={isEditable.edit}
+          editable={isEditable}
           editedUser={editedUser}
           handleInputChange={handleInputChange}
         />
@@ -102,13 +102,13 @@ const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
           <Label>
             <p>Country</p>
           </Label>
-          <InputWrapper editable={isEditable.edit}>
+          <InputWrapper editable={isEditable}>
             <CountryInput
               type="text"
               placeholder="Country"
               value={editedUser.country}
               maxLength={30}
-              readOnly={!isEditable.edit} // isEditable.edit= false
+              readOnly={!isEditable} // isEditable= false
               // onKeyDown={handleKeyPress}
               onChange={(e) => handleInputChange("country", e.target.value)}
             />
@@ -121,12 +121,12 @@ const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
           <p>Description</p>
         </Label>
 
-        <InputWrapper editable={isEditable.edit}>
+        <InputWrapper editable={isEditable}>
           <DescriptionTextarea
             rows="5"
             placeholder="Enter description"
             value={editedUser.description}
-            readOnly={!isEditable.edit} // isEditable.edit= false
+            readOnly={!isEditable} // isEditable= false
             onChange={(e) => handleInputChange("description", e.target.value)}
           />
         </InputWrapper>

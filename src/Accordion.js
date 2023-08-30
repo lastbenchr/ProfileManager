@@ -26,7 +26,7 @@ function Accordion({
   const accordionDisplay = useRef(null);
   const [height, setHeight] = useState("0px");
 
-  const [editable, setEditable] = useState(false); // local state variable for current edit mode border accordion
+  const [editable, setEditable] = useState(false); // local state variable for current edit mode & border accordion
   // const [name, setName] = useState(`${user.first} ${user.last}`);
 
   const [editedUser, setEditedUser] = useState({ ...user }); // shallow copy
@@ -42,6 +42,7 @@ function Accordion({
   }, [isActive, user]);
 
   const handleInputChange = (field, value) => {
+    console.log("picture value", field, value);
     setEditedUser((prevUser) => ({
       ...prevUser,
       [field]: value,
@@ -131,8 +132,8 @@ function Accordion({
   //   );
   // };
 
-  //delete & edit button
-  // console.log("Final edited user", editedUser);
+  // delete & edit button
+  console.log("Final edited user", editedUser);
 
   const isDisableSave =
     isAnyFieldValueEmpty(editedUser) || !hasUserChanged(user, editedUser);
@@ -143,7 +144,12 @@ function Accordion({
   return (
     <AccordionSection>
       <FlexContainer>
-        <RoundedImage imgSrc={editedUser.picture} />
+        <RoundedImage
+          imgSrc={editedUser.picture}
+          isEditable={editable}
+          handleInputChange={handleInputChange}
+          objectID={editedUser.id}
+        />
         <InputWrapper editable={editable}>
           <CountryInput
             type="text"
@@ -172,7 +178,7 @@ function Accordion({
           <InputFields
             editedUser={editedUser}
             handleInputChange={handleInputChange}
-            isEditable={{ edit: editable, setedit: setEditable }}
+            isEditable={editable}
           />
 
           <ButtonsWrapper>

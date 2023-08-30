@@ -6,7 +6,6 @@ const CustomSelect = styled.div`
   position: relative;
   border: none;
   outline: none;
-  cursor: pointer;
 
   border: ${(props) => props.editable ? "1px solid #cbcbcc" : "none"};
   border-radius: 20px;
@@ -16,11 +15,9 @@ const SelectedValue = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-  padding: 8px 14px;
-//   border: 1px solid #ccc;
-//   border-radius: 4px;
-  font-size: 13px;
-  text-align: left;
+    padding: 8px 14px;
+    font-size: 13px;
+    text-align: left;
   
 `;
 

@@ -1,4 +1,4 @@
-  import React, { useState } from "react";
+  import React, { useEffect, useState } from "react";
   import axios from "axios";
   import { Image } from "cloudinary-react";
   import styled from "styled-components";
@@ -10,13 +10,19 @@
     height: auto;
     border-radius: 50%;
     border: 1px solid #cbcbcc;
+    cursor: ${(props) => (props.isEditable ? "pointer" : "")};
   `;
 
 
-  const RoundedImage = ({imgSrc}) => {
+  const RoundedImage = ({imgSrc, handleInputChange, isEditable, objectID}) => {
     const [imageUrl, setImageUrl] = useState(imgSrc);
 
+    useEffect(() => {
+      setImageUrl(imgSrc); // Update imageUrl when imgSrc prop changes
+    }, [imgSrc]);
+
     const handleImageChange = async (e) => {
+
       const file = e.target.files[0];
 
       // Upload the selected image to Cloudinary
@@ -33,10 +39,13 @@
 
         // Set the image URL to the uploaded image URL from Cloudinary
         setImageUrl(response.data.secure_url);
+        handleInputChange("picture",response.data.secure_url)
       } catch (error) {
         console.error("Error uploading image:", error);
       }
     };
+
+    console.log("inside rounded image imgSrc",imgSrc, objectID);
 
     return (
       <div>
@@ -47,7 +56,9 @@
           height="100"
           crop="fill"
           radius="max"
-          onClick={() => document.getElementById("upload").click()}
+          onClick={() => isEditable ? document.getElementById("upload").click() : null}
+          isEditable={isEditable}
+          title={isEditable ? "Click to upload image" : null}
         />
         <input
           type="file"
