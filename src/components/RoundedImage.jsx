@@ -2,12 +2,14 @@
   import axios from "axios";
   import { Image } from "cloudinary-react";
   import styled from "styled-components";
+import Loader from "./utils/Loader";
 
 
 
   const StyledImage = styled(Image)`
     width: 60px;
-    height: auto;
+    height: 60px;
+    object-fit: contain;
     border-radius: 50%;
     border: 1px solid #cbcbcc;
     cursor: ${(props) => (props.isEditable ? "pointer" : "")};
@@ -17,6 +19,8 @@
   const RoundedImage = ({imgSrc, handleInputChange, isEditable, objectID}) => {
     const [imageUrl, setImageUrl] = useState(imgSrc);
 
+    const [isUploading, setIsUploading] = useState(false);
+
     useEffect(() => {
       setImageUrl(imgSrc); // Update imageUrl when imgSrc prop changes
     }, [imgSrc]);
@@ -24,6 +28,7 @@
     const handleImageChange = async (e) => {
 
       const file = e.target.files[0];
+      setIsUploading(true);
 
       // Upload the selected image to Cloudinary
       const formData = new FormData();
@@ -42,6 +47,8 @@
         handleInputChange("picture",response.data.secure_url)
       } catch (error) {
         console.error("Error uploading image:", error);
+      }finally {
+        setIsUploading(false); 
       }
     };
 
@@ -49,6 +56,11 @@
 
     return (
       <div>
+        {
+          isUploading &&   <Loader/>
+          
+          }
+        
         <StyledImage
           cloudName="dqtcqgy4k" // Replace this with your Cloudinary cloud name
           publicId={imageUrl}
