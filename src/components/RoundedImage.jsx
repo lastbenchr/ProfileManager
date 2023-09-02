@@ -1,4 +1,4 @@
-  import React, { useEffect, useState } from "react";
+  import React, { useState } from "react";
   import axios from "axios";
   import { Image } from "cloudinary-react";
   import styled from "styled-components";
@@ -15,18 +15,29 @@ import Loader from "./utils/Loader";
     cursor: ${(props) => (props.isEditable ? "pointer" : "")};
   `;
 
+  const ImageWrapper = styled.div`
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    `
 
-  const RoundedImage = ({imgSrc, handleInputChange, isEditable, objectID}) => {
-    const [imageUrl, setImageUrl] = useState(imgSrc);
+  const ImageInput = styled.input`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;    
+    opacity: 0;
+  `
 
+  const RoundedImage = ({imgSrc, handleInputChange, isEditable}) => {
     const [isUploading, setIsUploading] = useState(false);
 
-    useEffect(() => {
-      setImageUrl(imgSrc); // Update imageUrl when imgSrc prop changes
-    }, [imgSrc]);
 
     const handleImageChange = async (e) => {
-
       const file = e.target.files[0];
       setIsUploading(true);
 
@@ -43,43 +54,32 @@ import Loader from "./utils/Loader";
         );
 
         // Set the image URL to the uploaded image URL from Cloudinary
-        setImageUrl(response.data.secure_url);
-        handleInputChange("picture",response.data.secure_url)
+         handleInputChange("picture",response.data.secure_url)
       } catch (error) {
         console.error("Error uploading image:", error);
       }finally {
         setIsUploading(false); 
       }
     };
-
-    console.log("inside rounded image imgSrc",imgSrc, objectID);
-
     return (
-      <div>
-        {
-          isUploading &&   <Loader/>
-          
-          }
-        
+      <ImageWrapper>
+        { isUploading &&   <Loader/> }
         <StyledImage
           cloudName="dqtcqgy4k" // Replace this with your Cloudinary cloud name
-          publicId={imageUrl}
+          publicId={imgSrc}
           width="100"
           height="100"
-          crop="fill"
+          crop="fill" 
           radius="max"
-          onClick={() => isEditable ? document.getElementById("upload").click() : null}
           isEditable={isEditable}
-          title={isEditable ? "Click to upload image" : null}
         />
-        <input
+        { isEditable && <ImageInput
           type="file"
-          id="upload"
-          style={{ display: "none" }}
           accept="image/*"
+          title={isEditable ? "Click to upload image" : null} 
           onChange={handleImageChange}
-        />
-      </div>
+        />}
+      </ImageWrapper>
     );
   };
 

@@ -42,7 +42,6 @@ function Accordion({
   }, [isActive, user]);
 
   const handleInputChange = (field, value) => {
-    console.log("picture value", field, value);
     setEditedUser((prevUser) => ({
       ...prevUser,
       [field]: value,
@@ -148,7 +147,6 @@ function Accordion({
           imgSrc={editedUser.picture}
           isEditable={editable}
           handleInputChange={handleInputChange}
-          objectID={editedUser.id}
         />
         <InputWrapper editable={editable}>
           <CountryInput

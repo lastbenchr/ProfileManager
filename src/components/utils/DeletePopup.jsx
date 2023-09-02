@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { RiCloseLine } from "react-icons/ri"; // Import the close icon
 

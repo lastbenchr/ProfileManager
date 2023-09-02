@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import Accordion from "./Accordion";
 import { MainContainer } from "./components/Styles";
@@ -65,10 +64,6 @@ function App() {
     setDeleteDialogVisible(false);
     document.body.classList.remove("lock-scroll");
   };
-
-  // console.log("data", users);
-
-  // console.log("I got clicked set", isDeleteDialogVisible);
 
   return (
     <>
