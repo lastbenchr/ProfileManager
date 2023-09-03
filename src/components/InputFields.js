@@ -6,51 +6,19 @@ import { calculateAge, calculateDob } from "./utils/DRYmethods";
 import Dropdown from "./Dropdown";
 
 const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
-  const handleKeyDown = (e) => {
-    // Allow only numeric digits (0-9) and some special keys like Backspace, Arrow keys, etc.
-    const allowedKeys = [
-      "Backspace",
-      "Delete",
-      "ArrowLeft",
-      "ArrowRight",
-      "Tab",
-      "Home",
-      "End",
-    ];
+  const handleAgeChange = (e) => {
+    let newValue = e.target.value;
 
-    if (!/^\d$/.test(e.key) && !allowedKeys.includes(e.key)) {
-      e.preventDefault();
+    // replace an empty input with "1,"
+    newValue = newValue.replace(/^0+(?=[1-9])/, "1");
+    console.log("coming value", newValue, typeof newValue);
+
+    if (/^(?:[1-9]|[1-9][0-9])?$/.test(newValue)) {
+      // Use a regular expression to allow digits from 1 to 99
+      console.log("coming value inside set", newValue, typeof newValue);
+
+      handleInputChange("dob", calculateDob(newValue));
     }
-  };
-
-  const AgeInput = () => {
-    const [age, setAge] = useState(calculateAge(editedUser.dob));
-
-    return (
-      <div>
-        <Label>
-          <p>Age</p>
-        </Label>
-        <InputWrapper editable={isEditable}>
-          <StyledInput
-            type="text"
-            placeholder="Age"
-            value={age}
-            maxLength={2}
-            readOnly={!isEditable} // isEditable= false
-            onChange={(e) => {
-              if (isEditable) {
-                setAge(e.target.value);
-              }
-            }}
-            onBlur={() => {
-              // console.log("age back to dob", typeof calculateDob(age));
-              handleInputChange("dob", calculateDob(age));
-            }}
-          />
-        </InputWrapper>
-      </div>
-    );
   };
 
   const GenderSelect = () => {
@@ -95,7 +63,23 @@ const InputFields = ({ editedUser, isEditable, handleInputChange }) => {
   return (
     <>
       <FlexContainerInput style={{ marginTop: "17px" }}>
-        <AgeInput />
+        {/* <AgeInput /> */}
+        <div>
+          <Label>
+            <p>Age</p>
+          </Label>
+          <InputWrapper editable={isEditable}>
+            <StyledInput
+              type="text"
+              placeholder="Age"
+              title={isEditable && "max enter 2 digit"}
+              value={calculateAge(editedUser.dob)}
+              maxLength={2}
+              readOnly={!isEditable} // isEditable= false
+              onChange={handleAgeChange}
+            />
+          </InputWrapper>
+        </div>
         <GenderSelect />
         {/* <CountryInputField /> */}
         <div>

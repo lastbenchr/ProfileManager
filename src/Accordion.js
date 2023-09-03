@@ -22,13 +22,9 @@ function Accordion({
   handleSave,
   handleDeleteClick,
 }) {
-  // const [active, setActive] = useState(false);
   const accordionDisplay = useRef(null);
   const [height, setHeight] = useState("0px");
-
   const [editable, setEditable] = useState(false); // local state variable for current edit mode & border accordion
-  // const [name, setName] = useState(`${user.first} ${user.last}`);
-
   const [editedUser, setEditedUser] = useState({ ...user }); // shallow copy
 
   useEffect(() => {
@@ -96,8 +92,8 @@ function Accordion({
   }
 
   const handleKeyPress = (e) => {
-    const handleSplitName = (newValue) => {
-      const fullName = newValue;
+    const handleSplitName = (splitValue) => {
+      const fullName = splitValue;
 
       // eg:  return value of split method --> ["Sooraj", "Yadav"]; destructured this below.
       const [first, last] = fullName.split(" ");
@@ -107,38 +103,18 @@ function Accordion({
     };
 
     // Prevent entering numeric digits (0-9)
-    if (/\d/.test(e.key)) {
-      e.preventDefault();
+    let newValue = e.target.value;
+    if (/\d/.test(newValue)) {
+      // If it contains digits, remove them
+      newValue = newValue.replace(/\d/g, "");
     } else {
-      const newValue = e.target.value;
+      console.log("coming value inside name", newValue);
       handleSplitName(newValue);
     }
   };
 
-  // const CountryInputField = ({}) => {
-  //   return (
-  //     <InputWrapper editable={editable}>
-  //       <CountryInput
-  //         type="text"
-  //         placeholder="Name"
-  //         maxLength={30}
-  //         // value={`${editedUser.first} ${editedUser.last}`}
-  //         // onKeyDown={handleKeyPress}
-  //         onKeyDown={(e) => handleInputChange("first", e.target.value)}
-  //         readOnly={!editable} // initally true
-  //       />
-  //     </InputWrapper>
-  //   );
-  // };
-
-  // delete & edit button
-  console.log("Final edited user", editedUser);
-
   const isDisableSave =
     isAnyFieldValueEmpty(editedUser) || !hasUserChanged(user, editedUser);
-  // const isDisableSave = true;
-  // console.log("Individual Accordion user data", user);
-  // console.log("Individual Accordion editedUser data", editedUser);
 
   return (
     <AccordionSection>
@@ -159,7 +135,6 @@ function Accordion({
           />
         </InputWrapper>
         <AccordionButton
-          // className={`accordion ${active ? "active" : ""}`}
           onClick={toggleAccordion}
           isExpanded={stateExpanded.expanded}
         >
