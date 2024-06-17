@@ -17,12 +17,13 @@ const FlexContainer = styled.div`
 `;
 
 const MainContainer = styled.div`
-  margin: 0 auto;
+  margin: 0px 13px;
   max-width: 1240px;
   padding: calc(16px + 1.5625vw);
   text-align: center;
   //to center inside contents
-  display: grid;
+  display: flex;
+  flex-direction: column;
   place-items: center;
   gap: 10px;
   @media (min-width: 1020px) {

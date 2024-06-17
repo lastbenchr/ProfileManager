@@ -189,6 +189,7 @@ const CountryInput = styled.input`
   margin-left: 5px;
   font-weight: bold;
   font-size: 18px;
+  width: 100%;
 `;
 
 const InputWrapper = styled.div`
