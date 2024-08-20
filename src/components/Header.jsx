@@ -2,7 +2,7 @@ import React from 'react'
 import { styled } from 'styled-components';
 import { FaSearch } from 'react-icons/fa';
 
-export default function Header() {
+export default function Header({query, handleSearch}) {
   return (
     <>
       <HeaderWrapper>
@@ -13,8 +13,8 @@ export default function Header() {
         <SearchInput
           type="text"
           placeholder="Search user"
-          // value={query}
-          // onChange={handleSearch}
+          value={query}
+          onChange={handleSearch}
         />
       </SearchContainer>
     </>

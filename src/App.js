@@ -18,6 +18,9 @@ function App() {
   const [isDeleteDialogVisible, setDeleteDialogVisible] = useState(false);
   const [deleteAccordionId, setDeleteAccordionId] = useState("");
 
+  // search bar logic
+  const [query, setQuery] = useState('');
+
   useEffect(() => {
     // Load data from local storage when component mounts
     const storedData = JSON.parse(localStorage.getItem("users"));
@@ -27,6 +30,15 @@ function App() {
     }
     setIsLocalStorageCheck(true);
   }, []);
+
+  //search bar logic
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
+    const filteredResults = data.filter(user =>
+      user.first.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setUsers(filteredResults);
+  };
 
   const handleActiveAccordion = (userId) => {
     if (expandedAccordionId !== userId) {
@@ -75,7 +87,7 @@ function App() {
         />
       )}
       <MainContainer>
-        <Header />
+        <Header query={query} handleSearch={handleSearch}/>
         {isLocalStorageCheck &&
           users.map((user) => {
             return (
