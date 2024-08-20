@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 export default function Footer() {
   return (
     <Copyright>
-    <p>© 2023 Copyright Sooraj Yadav | lastbenchr. </p>
+    {/* <p>© 2023 Copyright Sooraj Yadav | lastbenchr. </p> */}
   </Copyright>
   )
 }
@@ -12,7 +12,7 @@ export default function Footer() {
 
 
 const Copyright = styled.div`
-    margin-top: 8rem;
+    margin-top: 6rem;
    p {
     text-align: center;
     font-size: 12px;

@@ -213,6 +213,7 @@ const AccordionSection = styled.div`
   border: 1px solid #cbcbcc;
   border-radius: 12px;
   padding: 10px 20px;
+  box-sizing: border-box;   
 `;
 
 const AccordionButton = styled.div`
