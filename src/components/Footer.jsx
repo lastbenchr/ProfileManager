@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 export default function Footer() {
   return (
     <Copyright>
-    {/* <p>© 2023 Copyright Sooraj Yadav | lastbenchr. </p> */}
+    {/* <p>© 2024 Copyright Sooraj Yadav | lastbenchr. </p> */}
   </Copyright>
   )
 }
